@@ -67,6 +67,7 @@ In this Design object, we then create a new Circuit object. This is another chan
 We start by adding a transistor to our circuit using the M function. Here we specify that the transistor is drawn such that the source terminal (S) is located at the origin. Other terminals (D, G1, G2) could just as easily be specified as the anchor point. We also name this transistor object 'tran1'. Here we drew this transistor with all the default settings for length, width, height, etc. but you could easily overwrite these defaults for this particular transistor by specifying keyword arguments.
 
 Next we draw a short trace starting at the drain of the tranistor and extending 500um down. The T function takes in a list of any number of Points in 3D space and connects them all up with a smooth trace. Note that these points can be plain tuples (as we used to define the position of the transistor) or we can use the microfusion Point object which has some useful features.
+
 The first point in our trace is specified as the drain terminal of the transistor we made already (tran1.D). This way, if we move or modify the transistor, the trace moves along with it automatically. Internally, this first point is represented not as a tuple, but as a microfusion Point object. This means we can do intuitive operations on this point, like shifting it by 500um down by simply "adding" a tuple to it, which we have demonstrated here. Note that you can't do this with native python tuples.
 
 We then draw a resistor connected to the endpoint of the trace we just drew (trace1.P2). We specify that the resistance should be 50 kPa s/ul, and the computer will automatically size and draw a serpentine channel to meet this desired value. Similar to the transistor, we specify that the left side of the resistor (L) is the anchor point for drawing the component. Here we also specify an optional drawing parameter, rotation, using a keyword argument.
@@ -99,7 +100,9 @@ Like our earlier trace, we are just connecting existing element terminals, in th
 	cir.T([tran1.G1,inp1.C],secs=mf.RecSec(W=250,H=-50))
 ```
 Traces can draw between any number of Points in a list. Here we also specify an optional drawing parameter for the trace, a radius-of-curvature of 100um.
+
 The final line hints at how extensible the trace function can be. So far we had been drawing all traces using the default cross-section, which is a rectangle 250um wide and 50um tall. However, we can specify any cross-sectional shape we want to draw our traces (and even our transistors) with. These cross-sections are termed here as "Sections", and you can specify various shapes (rectangular, curved edge rectangular, trapezoidal, tubular) with different dimensions. You can even specify a list of sections to be used for every point in a trace, and the program will smoothly transition from one cross-section to another as it draws the trace between the points specified, which enables tapers or complex trace shape changes.
+
 Here, we make a rectangular channel from the gate of the transistor to the input port. These are both on the underside of the chip and we therefore use a section that runs beneath the membrane, where the height H is negative.
 
 ## Details
@@ -137,11 +140,23 @@ self.params = { # Default values
 When you create a new Circuit within a Design, you can specify new values for these parameters that only affect that new Circuit. Any parameters that have not been specified are copied from the Design unchanged. Similarly, when you create an Element within a Circuit, you can specify new values for these parameters that only affect that new Element. Any parameters that have not been specified are copied from the Circuit unchanged.
 
 ### Elements
-#### Trace
-#### Transistor
-#### Resistor
-#### Via
-#### Port
+#### Trace (T)
+Draw a trace connecting many points.
+Terminals
+	P1 : Starting point
+	P2 : Ending point
+	C : Midpoint of start and end point
+Required Arguments
+	pts : List of Points or tuples to be connected in a trace
+Optional Arguments
+	trace_sec: Section to be used when drawing all points of the trace
+	trace_sec: List of sections (same length as pts) to draw individual sections for each point in the trace
+	trace_R: Radius of curvature in UM to apply to the entire trace path
+	trace_R: List of radii of curvatures (same length as pts) to specify the radius of curvature for each point in the trace
+#### Transistor (M)
+#### Resistor (R)
+#### Via (V)
+#### Port (P)
 ### Sections
 #### RecSec
 #### CurveSec

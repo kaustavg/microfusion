@@ -68,7 +68,7 @@ We start by adding a transistor to our circuit using the M function. Here we spe
 
 Next we draw a short trace starting at the drain of the tranistor and extending 500um down. The T function takes in a list of any number of Points in 3D space and connects them all up with a smooth trace. Note that these points can be plain tuples (as we used to define the position of the transistor) or we can use the microfusion Point object which has some useful features.
 
-The first point in our trace is specified as the drain terminal of the transistor we made already (tran1.D). This way, if we move or modify the transistor, the trace moves along with it automatically. Internally, this first point is represented not as a tuple, but as a microfusion Point object. This means we can do intuitive operations on this point, like shifting it by 500um down by simply "adding" a tuple to it, which we have demonstrated here. Note that you can't do this with native python tuples.
+The first point in our trace is specified as the drain terminal of the transistor we made already (tran1.D). This way, if we move or modify the transistor, the trace moves along with it automatically. Internally, this first point is represented not as a tuple, but as a microfusion Point object. This means we can do intuitive operations on this point, like shifting it by 500um down by simply "adding" a tuple to it, which we have used for the second point in the trace. Note that if you do not specify the z coordinate, the program assumes a value of 0.
 
 We then draw a resistor connected to the endpoint of the trace we just drew (trace1.P2). We specify that the resistance should be 50 kPa s/ul, and the computer will automatically size and draw a serpentine channel to meet this desired value. Similar to the transistor, we specify that the left side of the resistor (L) is the anchor point for drawing the component. Here we also specify an optional drawing parameter, rotation, using a keyword argument.
 
@@ -140,8 +140,10 @@ self.params = { # Default values
 When you create a new Circuit within a Design, you can specify new values for these parameters that only affect that new Circuit. Any parameters that have not been specified are copied from the Design unchanged. Similarly, when you create an Element within a Circuit, you can specify new values for these parameters that only affect that new Element. Any parameters that have not been specified are copied from the Circuit unchanged.
 
 ### Elements
+Below are the supported elements you can combine to make circuits.
 #### Trace (T)
-Draw a trace connecting many points.
+Draw a trace connecting a list of points.
+```
 Terminals
 	P1 : Starting point
 	P2 : Ending point
@@ -153,11 +155,68 @@ Optional Arguments
 	trace_sec: List of sections (same length as pts) to draw individual sections for each point in the trace
 	trace_R: Radius of curvature in UM to apply to the entire trace path
 	trace_R: List of radii of curvatures (same length as pts) to specify the radius of curvature for each point in the trace
+```
 #### Transistor (M)
+Draw a fluidic transistor accounting for misalignments.
+```
+Terminals
+	S : Source
+	D : Drain
+	G1 : Left side of Gate
+	G2 : Right side of Gate
+	C : Center
+Required Arguments
+	point : Location of anchor point
+Optional Arguments
+	anchor : Which terminal should be used as anchor (default: 'S')
+	rotation : Rotation angle in degrees (default: 0)
+	invert : Whether to draw flow channel below or above membrane (default: False)
+	flow_sec: Section to be used to draw flow channel
+	gate_sec: Section to be used to draw gate channel
+	slop: Extra margin added around transistor to account for misalignments
+```
 #### Resistor (R)
+Draw a serpentine resistor.
+```
+Terminals
+	L : Left side
+	R : Right side
+	C : Midpoint of left and right side points
+Required Arguments
+	point : Location of anchor point
+	val: Resistance value in kPa*s/uL
+Optional Arguments
+	anchor : Which terminal should be used as anchor (default: 'L')
+	rotation : Rotation angle in degrees (default: 0)
+	justify : Whether to turn the serpentine towards the left or right side with respect to draw direction (default: 'left')
+	res_sec: Section to be used in serpentine
+	res_L: Bounding box length in um
+	fluid_Mu: Dynamic vicosity used to calculate resistance in Pa*s
+```
 #### Via (V)
+Draw a cylinder extending vertically in the Z axis.
+```
+Terminals
+	C : Starting point of via
+Required Arguments
+	point : Location of via starting point
+Optional Arguments
+	zspan : Two-element list of starting and ending Z cordinates for the cylinder (default: [0, params['sub_H']])
+	via_R : Radius of via lumen in um
+```
 #### Port (P)
+Draw a via to the edge of the chip and create a barb to interface with tubing.
+```
+Terminals
+	C : Starting point of port
+Required Arguments
+	point : Location of port starting point
+Optional Arguments
+	zspan : Two-element list of starting and ending Z cordinates for the port lumen (default: [0, params['sub_H']])
+	via_R : Radius of the port lumen in um
+```
 ### Sections
+Below are the supported Section objects you can use to specify the cross-sectional shapes for traces, resistors, and transistors.
 #### RecSec
 #### CurveSec
 #### TrapzSec

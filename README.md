@@ -104,6 +104,17 @@ Here, we make a rectangular channel from the gate of the transistor to the input
 
 ## Details
 ### Points
+Microfusion Point objects support the following operations (between a Point/Point, or a Point/Tuple, but not Tuple/Tuple)
+|Symbol| Operation|
+|:---:|:---|
+|+ | Add in x, y, and z|
+|- | Subtract in x, y, and z|
+|\| | Take x of left point and y of right point|
+|^ | Take x,y of left point and z of right point|
+|% | Return midpoint in x and y|
+|* | Multiply elementwise by a scalar|
+|/ | Divide elementwise by a scalar|
+
 ### Drawing Parameters
 ### Elements
 ### Sections

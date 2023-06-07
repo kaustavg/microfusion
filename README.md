@@ -33,12 +33,12 @@ def main():
 	sup1 = cir.P(tran1.S+(0,5000)) # Supply Port
 	gnd1 = cir.P(res1.R+(0,-5000)) # Ground Port
 	out1 = cir.P((sup1.C%gnd1.C)+(6000,1000)) # Output Port
-	inp1 = cir.P(tran1.G1+(-6000,0),zspan=[0,-cir.params['via_H']]) # Input Port
+	inp1 = cir.P(tran1.G1+(-6000,0),zspan=[0,-cir.params['sub_H']]) # Input Port
 	# Traces
 	cir.T([sup1.C,tran1.S])
 	cir.T([res1.R,gnd1.C])
-	cir.T([tran1.G1,inp1.C],secs=mf.RecSec(W=250,H=-50))
 	cir.T([tran1.D+(0,-250),tran1.D+(1000,-250),out1.C],trace_R=100)
+	cir.T([tran1.G1,inp1.C],secs=mf.RecSec(W=250,H=-50))
   ```
   
 To run this script in Fusion 360, make sure that RunMicrofusion.py is correctly pointing to our script file. Then in Fusion 360 we navigate to Utilities > Add-Ins > Scripts and Add-Ins > RunMicrofusion.py. The drawing process should be done in a few seconds.
@@ -81,7 +81,7 @@ The supply port is located above the transistor source terminal (S) and the grou
 
 ```python
 	out1 = cir.P((sup1.C%gnd1.C)+(6000,1000)) # Output Port
-	inp1 = cir.P(tran1.G1+(-6000,0),zspan=[0,-cir.params['via_H']]) # Input Port
+	inp1 = cir.P(tran1.G1+(-6000,0),zspan=[0,-cir.params['sub_H']]) # Input Port
 ```
 Here we see some more advanced Point operations. The % operator automatically returns the midpoint of two Points, so here we are specifying that the output port is located 6mm to the right and 1mm above the midpoint of the supply port center (C) and the ground port center (C).
 
@@ -104,17 +104,46 @@ Here, we make a rectangular channel from the gate of the transistor to the input
 
 ## Details
 ### Points
-Microfusion Point objects support the following operations (between a Point/Point, or a Point/Tuple, but not Tuple/Tuple)
+Microfusion Point objects support the following operations (between a Point/Point, Tuple/Point, or a Point/Tuple, but not Tuple/Tuple)
 |Symbol| Operation|
 |:---:|:---|
 |+ | Add in x, y, and z|
 |- | Subtract in x, y, and z|
 |\| | Take x of left point and y of right point|
-|^ | Take x,y of left point and z of right point|
+|^ | Take x, y of left point and z of right point|
 |% | Return midpoint in x and y|
 |* | Multiply elementwise by a scalar|
 |/ | Divide elementwise by a scalar|
 
 ### Drawing Parameters
+The default drawing paramters for a new Design are a python dictionary named "params":
+```python
+self.params = { # Default values
+	# Constants
+	'fluid_Mu':1.01e-3, # Fluid dynamic viscosity in Pa*s
+	# Fab parameters
+	'slop': 250, # Slop in alignment to space elements in UM
+	'sub_H': 4000, # Substrate thickness in UM
+	# Element parameters
+	'trace_sec': RecSec(W=250, H=50), # Default section
+	'trace_R': 250, # Trace radius of curvature in UM
+	'chan_sec': RecSec(W=250, H=50), # Transistor flowchannel section
+	'gate_sec': RecSec(W=250, H=-50), # Transistor gate section
+	'res_L': 1000, # Resistor bounding box length in UM
+	'res_sec': RecSec(W=50, H=50), # Resistor section
+	'via_R': 350, # Via radius in UM
+	}
+```
+When you create a new Circuit within a Design, you can specify new values for these parameters that only affect that new Circuit. Any parameters that have not been specified are copied from the Design unchanged. Similarly, when you create an Element within a Circuit, you can specify new values for these parameters that only affect that new Element. Any parameters that have not been specified are copied from the Circuit unchanged.
+
 ### Elements
+#### Trace
+#### Transistor
+#### Resistor
+#### Via
+#### Port
 ### Sections
+#### RecSec
+#### CurveSec
+#### TrapzSec
+#### TubeSec

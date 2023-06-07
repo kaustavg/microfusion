@@ -4,11 +4,8 @@
 import adsk.core, adsk.fusion, adsk.cam, traceback
 import sys, importlib
 
-device_path = r'C:\Users\Kaustav\Dropbox\Projects\Starling\AutoCAD Files\Resin'
-device_file = 'Resin_12_0'
-
-# device_path = r'C:\Users\Kaustav\Dropbox\Projects\Starling\Fusion Files\Opamp'
-# device_file = 'Opamp_2_0'
+device_path = r'C:\Path\To\File\Here'
+device_file = 'Amp_Example'
 
 def run(context):
     ui = None

@@ -1,4 +1,4 @@
-# microfusion
+# Microfusion
 Programmatically draw 3D microfluidic chips in Fusion 360.
 
 ## Overview

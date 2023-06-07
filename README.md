@@ -218,6 +218,32 @@ Optional Arguments
 ### Sections
 Below are the supported Section objects you can use to specify the cross-sectional shapes for traces, resistors, and transistors.
 #### RecSec
+Draw a rectangular cross-section. Negative heights are drawn below the draw point.
+```
+Optional Arguments
+	W : Width of rectangle in um (default: 250)
+	H : Height of rectangle in um (default: 50)
+```
 #### CurveSec
+Draw a rectangular cross-section with filleted edges. Negative heights are drawn below the draw point.
+```
+Optional Arguments
+	W : Width of rectangle in um (default: 250)
+	H : Height of rectangle in um (default: 50)
+	R : Fillet radius (default: H)
+```
 #### TrapzSec
+Draw a rectangular cross-section with chamfered edges. Negative heights are drawn below the draw point.
+```
+Optional Arguments
+	W : Maximum width of cross-section in um (default: 250)
+	H : Total height of cross-section in um (default: 50)
+	Wt : Minimum width of cross-section in um (default: W-2*H)
+	Ht : Z length along which the the width tapers to Wt in um (default: 45deg chamfer)
+```
 #### TubeSec
+Draw a circular cross-section.
+```
+Optional Arguments
+	R : Radius of cross-section in um (default: 250)
+```

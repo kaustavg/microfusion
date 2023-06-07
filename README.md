@@ -25,25 +25,24 @@ import microfusion as mf
 def main():
 	design = mf.Design()
 	cir = design.add_circuit()
-  # Circuit Components
+	# Circuit Components
 	tran1 = cir.M((0,0,0),anchor='S') # Transistor
-	res1 = cir.R(tran1.D,50,anchor='L',rotation=-90) # Resistor of 20 kPs*s/uL
-
+	res1 = cir.R(tran1.D,50,anchor='L',rotation=-90) # Resistor of 50 kPa*s/uL
+	# Ports
 	sup1 = cir.P(tran1.S+(0,5000)) # Supply Port
 	gnd1 = cir.P(res1.R-(0,5000)) # Ground Port
-  out1 = cir.P((sup1.C%gnd1.C)+(6000,0),zspan) # Output Port
+	out1 = cir.P((sup1.C%gnd1.C)+(6000,0),zspan) # Output Port
 	inp1 = cir.P(tran1.G-(6000,0),zspan=[0,-cir.params['via_H']]) # Input Port
-  
-
+	# Traces
 	cir.T([sup1.C,tran1.S])
 	cir.T([res1.R,gnd1.C])
-  
-	cir.T([tran1.G1,inp1.C|tran1.G1,inp1.C],secs=mf.RectSect(W=250,H=-50))
+	cir.T([tran1.D, tran1.D|out1.C,out1.C],trace_R=100)
+	cir.T([tran1.G1,inp1.C],secs=mf.RectSect(W=250,H=-50))
   ```
   
 
 
-## Objects
+## Object Details
 ### Points
 ### Circuits
 ### Elements

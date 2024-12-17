@@ -23,7 +23,7 @@ class RecSec(Section):
 		self.span = W # Used to avoid loft self-intersections
 		h = abs(H*1e-6) # SI height
 		w = abs(W*1e-6) # SI width
-		# Multiply by mu*L to obtain resistance in SI
+		# Multiply following by mu*L to obtain resistance in SI
 		# This has units of 1/(m^4)
 		self.res_muL = 12/((1-0.63*(h/w))*h**3*w)
 
@@ -55,8 +55,16 @@ class CurveSec(Section):
 		'''Constructor for a Curvilinear section.'''
 		self.W = W
 		self.H = H
-		self.R = H if R is None else R # TODO: Floating point errors, make eps
+		self.R = H if R is None else R
 		self.span = W # Used to avoid loft self-intersections
+		h = abs(H*1e-6) # SI height
+		w = abs(W*1e-6) # SI width
+		r = abs(self.R*1e-6) # SI radius
+		# Multiply following by mu*L to obtain resistance in SI
+		# This has units of 1/(m^4)
+		P = 2*w + 2*h - 4*r + math.pi*r
+		A = w*h - 2*r*r + 0.5*math.pi*r*r
+		self.res_muL = 2*(P*P)/(A*A*A)
 
 	def draw(self,circuit,pc,n):
 		'''Return the path centered around pc normal to n.'''
@@ -92,7 +100,8 @@ class CurveSec(Section):
 		collection = adsk.core.ObjectCollection.create()
 		objs = segs[:3]+[arc1]+[segs[3]]+[arc2] # Add in order
 		for obj in objs:
-			collection.add(obj)
+			if obj.isValid:
+				collection.add(obj)
 		path = circuit._comp.features.createPath(collection)
 		return path
 

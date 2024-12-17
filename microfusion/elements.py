@@ -193,10 +193,10 @@ class Port:
 		# Set the pin
 		self.C = pt
 
-
 class Transistor:
 	def __init__(self,circuit,pt,anchor='C',rotation=0,invert=False,**kwargs):
 		'''Constructor for transistor.'''
+		# Oriented such that channel is UD and gate is LR.
 		self.circuit = circuit
 		self.pt = Pt(*pt) if isinstance(pt,tuple) else pt
 		pt = self.pt

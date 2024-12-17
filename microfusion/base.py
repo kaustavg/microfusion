@@ -91,6 +91,7 @@ class Circuit:
 			self._comp.xYConstructionPlane)
 		self._sketch.isComputeDeferred = True # Saves time evaluating
 		self._sketch.areProfilesShown = False # Saves time drawing
+		self._sketch.isLightBulbOn = False # Reduce visual clutter
 
 	## Elements
 	def T(self,*args,**kwargs):

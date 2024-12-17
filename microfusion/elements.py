@@ -38,6 +38,8 @@ class Trace:
 		def makeLoft(curve,s1,s2,n1,n2):
 			# Make object collection
 			skel = adsk.core.ObjectCollection.create()
+			if not curve.isValid:
+				return
 			skel.add(curve)
 			skel_path = circuit._comp.features.createPath(skel)
 			# Prepare Loft

@@ -90,6 +90,7 @@ class Trace:
 		makeLoft(asegs[-1],secs[-2],secs[-1],n2,n2)
 
 		# Draw endcaps (TBD: 'square' is only axis aligned right now)
+		# TBD: trace_cap is only accurate for RecSec, others make rectangular cap!
 		if self.params['trace_cap'] is 'round':
 			circuit.V(pts[0],zspan=[pts[0].z,pts[0].z+secs[0].H],
 				via_R=secs[0].span/2)

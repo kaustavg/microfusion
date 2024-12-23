@@ -123,3 +123,9 @@ class Circuit:
 		port = Port(self,*args,**kwargs)
 		self.elements.append(port)
 		return port
+
+	def text(self,*args,**kwargs):
+		'''Add text to the circuit.'''
+		txt = Text(self,*args,**kwargs)
+		self.elements.append(txt)
+		return txt

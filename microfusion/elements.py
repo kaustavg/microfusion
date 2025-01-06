@@ -52,13 +52,17 @@ class Trace:
 				n1,n2 = n2,n1
 				asec1 = s1.draw(circuit,p1,n1)
 				asec2 = s2.draw(circuit,p2,n2)
-				loft_inp.loftSections.add(asec2)
-				loft_inp.loftSections.add(asec1)
+				if asec2.isValid:
+					loft_inp.loftSections.add(asec2)
+				if asec1.isValid:
+					loft_inp.loftSections.add(asec1)
 			else:
 				asec1 = s1.draw(circuit,p1,n1)
 				asec2 = s2.draw(circuit,p2,n2)
-				loft_inp.loftSections.add(asec1)
-				loft_inp.loftSections.add(asec2)
+				if asec1.isValid:
+					loft_inp.loftSections.add(asec1)
+				if asec2.isValid:
+					loft_inp.loftSections.add(asec2)
 			loft_inp.centerLineOrRails.addCenterLine(skel_path)
 			loft_inp.isSolid = True
 			circuit._comp.features.loftFeatures.add(loft_inp)
@@ -275,7 +279,7 @@ class Resistor:
 		T = T_sec.span
 
 		# Compute the number of wiggles that fit
-		n = (L-T)//(R*4)
+		n = math.floor((L-T)//(R*4))
 		# Compute the centerline distance with minimum wiggle amplitude
 		wiggle_dist = n*(2*R + math.pi*R)
 		# Compute the the wedge distances for entry and exit

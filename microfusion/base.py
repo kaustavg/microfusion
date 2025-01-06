@@ -61,11 +61,12 @@ class Design:
 		self.circuits.append(cir)
 		return cir
 
-	def draw_substrate(self,xlen,ylen,zspan):
+	def draw_substrate(self,xlen,ylen,zspan,origin=None):
 		'''Draw a cuboid centered at 0,0 from z[0] to z[1].'''
+		origin = self.origin if origin is None else origin
 		circuit = self.add_circuit()
-		left = Pt(-xlen/2,0,zspan[0])
-		right = Pt(xlen/2,0,zspan[0])
+		left = origin + Pt(-xlen/2,0,zspan[0])
+		right = origin + Pt(xlen/2,0,zspan[0])
 		substrate = circuit.T([left,right],
 			secs=RecSec(W=ylen,H=zspan[1]-zspan[0]))
 		# Perform intersection with 

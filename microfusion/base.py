@@ -94,39 +94,56 @@ class Circuit:
 		self._sketch.areProfilesShown = False # Saves time drawing
 		self._sketch.isLightBulbOn = False # Reduce visual clutter
 
+	def clean_sketch(self):
+		'''Deletes the existing sketch and creates a fresh sketch for performance improvements.'''
+		# Fusion becomes much slower the more objects you add to a sketch
+		# Run each time after finished drawing a new element
+		self._sketch.deleteMe()
+		self._sketch = self._comp.sketches.add(
+			self._comp.xYConstructionPlane)
+		self._sketch.isComputeDeferred = True # Saves time evaluating
+		self._sketch.areProfilesShown = False # Saves time drawing
+		self._sketch.isLightBulbOn = False # Reduce visual clutter
+
 	## Elements
 	def T(self,*args,**kwargs):
 		'''Add a Trace to the circuit.'''
 		trace = Trace(self,*args,**kwargs)
 		self.elements.append(trace)
+		self.clean_sketch()
 		return trace
 
 	def V(self,*args,**kwargs):
 		'''Add a Via to the circuit.'''
 		via = Via(self,*args,**kwargs)
 		self.elements.append(via)
+		self.clean_sketch()
 		return via
 
 	def M(self,*args,**kwargs):
 		'''Add a Transistor to the circuit.'''
 		trans = Transistor(self,*args,**kwargs)
 		self.elements.append(trans)
+		self.clean_sketch()
 		return trans
 
 	def R(self,*args,**kwargs):
 		'''Add a Resistor to the circuit.'''
 		res = Resistor(self,*args,**kwargs)
 		self.elements.append(res)
+		self.clean_sketch()
 		return res
 
 	def P(self,*args,**kwargs):
 		'''Add a Port to the circuit.'''
 		port = Port(self,*args,**kwargs)
 		self.elements.append(port)
+		self.clean_sketch()
 		return port
 
 	def text(self,*args,**kwargs):
 		'''Add text to the circuit.'''
 		txt = Text(self,*args,**kwargs)
 		self.elements.append(txt)
+		self.clean_sketch()
 		return txt

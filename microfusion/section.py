@@ -62,9 +62,16 @@ class CurveSec(Section):
 		r = abs(self.R*1e-6) # SI radius
 		# Multiply following by mu*L to obtain resistance in SI
 		# This has units of 1/(m^4)
-		P = 2*w + 2*h - 4*r + math.pi*r
-		A = w*h - 2*r*r + 0.5*math.pi*r*r
-		self.res_muL = 2*(P*P)/(A*A*A)
+		# Originally, used the 2*P^2/A^3 approximation, but that is practically 
+		# equivalent to the parallel infinite plate approximation.
+		# The infinite parallel plate approximation underestimates the true resistance.
+		# P = 2*w + 2*h - 4*r + math.pi*r
+		# A = w*h - 2*r*r + 0.5*math.pi*r*r
+		# self.res_muL = 2*(P*P)/(A*A*A)
+		# A better approximation is the rectangle approximation, which is used above.
+		# Note: the rectangle approximation ALSO underestimates true resistance 
+		# (due to chamfers), but not by much.
+		self.res_muL = 12/((1-0.63*(h/w))*h**3*w)
 
 	def draw(self,circuit,pc,n):
 		'''Return the path centered around pc normal to n.'''

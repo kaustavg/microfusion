@@ -333,7 +333,7 @@ class Resistor:
 		self.R = points[-1]
 		self.C = self.L%self.R
 class Text:
-	def __init__(self,circuit,pt,text,zspan=None,size=250,**kwargs):
+	def __init__(self,circuit,pt,text,zspan=None,size=300,**kwargs):
 		'''Constructor for text.'''
 		self.circuit = circuit
 		self.pt = Pt(*pt) if isinstance(pt,tuple) else pt
@@ -352,7 +352,8 @@ class Text:
 		inp.setAsMultiLine(pt.acadPoint3D,endpt.acadPoint3D,
 			adsk.core.HorizontalAlignments.LeftHorizontalAlignment,
 			adsk.core.VerticalAlignments.TopVerticalAlignment, 0)
-		inp.fontName = 'Consolas'
+		inp.fontName = 'Lucida Console'
+		inp.textStyle = 5 #BoldUnderline (TBD: Doesnt work)
 		sketch_text = texts.add(inp)
 		if zspan[1] != 0:
 			distup = adsk.core.ValueInput.createByReal(zspan[1]*circuit.design.units)
